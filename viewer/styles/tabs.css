@@ -1,0 +1,143 @@
+/* tabs.css — Tab bar and main layout */
+
+#app-layout {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+#tab-bar {
+  display: flex;
+  align-items: stretch;
+  background: var(--color-primary-dark);
+  padding: 0 8px;
+  gap: 2px;
+  flex-shrink: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  position: relative;
+  z-index: 5000;
+  min-height: 40px;
+  border-bottom: 1px solid rgba(0,0,0,0.28);
+  scrollbar-color: rgba(160,184,208,0.32) var(--color-primary-dark);
+  scrollbar-width: thin;
+}
+#tab-bar::-webkit-scrollbar {
+  height: 8px;
+  background: var(--color-primary-dark);
+}
+#tab-bar::-webkit-scrollbar-track {
+  background: var(--color-primary-dark);
+}
+#tab-bar::-webkit-scrollbar-thumb {
+  background: rgba(160,184,208,0.34);
+  border: 2px solid var(--color-primary-dark);
+  border-radius: 8px;
+}
+#tab-bar::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--color-primary-dark);
+  pointer-events: none;
+}
+
+.tab-group {
+  display: inline-flex;
+  align-items: stretch;
+  flex: 0 0 auto;
+  background: transparent;
+  min-height: 40px;
+}
+
+.tab-btn {
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  color: #a0b8d0;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.tab-btn:hover        { color: #e0eaf4; border-bottom-color: rgba(255,255,255,0.3); }
+.tab-btn.active       { color: #fff; border-bottom-color: var(--color-accent); background: rgba(255,255,255,0.08); }
+.tab-btn[data-tab="debug"] { color: #7090a8; font-weight: 400; }
+.tab-btn[data-tab="debug"]:hover  { color: #a0b8d0; }
+.tab-btn[data-tab="debug"].active { color: #e0a870; border-bottom-color: #e0a870; }
+
+#tab-content {
+  flex: 1;
+  overflow: hidden;
+  background: #fff;
+  position: relative;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Persistent tab panels (panel-preservation approach) */
+#tab-content > [data-tab-panel] {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Tab group separators and labels */
+.tab-group-sep {
+  display: inline-block;
+  width: 1px;
+  background: rgba(255,255,255,0.12);
+  margin: 6px 4px;
+  align-self: stretch;
+  flex-shrink: 0;
+}
+
+.tab-group-label {
+  display: inline-flex;
+  align-items: flex-end;
+  padding: 0 4px 4px;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(160,184,208,0.45);
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: none;
+  align-self: flex-end;
+  line-height: 1;
+}
+
+/* Config group tabs — slightly muted to signal secondary nature */
+.tab-btn[data-group="Config"] {
+  color: #7a96b0;
+  font-size: 11px;
+}
+.tab-btn[data-group="Config"]:hover { color: #c0d4e8; }
+.tab-btn[data-group="Config"].active { color: #fff; }
+
+/* Dev group tabs */
+.tab-btn[data-group="Dev"] {
+  color: #5a7890;
+  font-size: 11px;
+  font-style: italic;
+}
+.tab-btn[data-group="Dev"]:hover { color: #90aac0; }
+.tab-btn[data-group="Dev"].active { color: #e0a870; border-bottom-color: #e0a870; }
+
+/* Print-only section wrappers (hidden on screen, shown only at @media print) */
+.print-only { display: none !important; }

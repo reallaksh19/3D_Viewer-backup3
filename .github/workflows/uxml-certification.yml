@@ -1,0 +1,164 @@
+name: UXML Certification
+
+on:
+  pull_request:
+    paths:
+      - "viewer/uxml/**"
+      - "viewer/tests/uxml-*.test.js"
+      - "viewer/tests/rvm-pcf-*.test.js"
+      - "tools/uxml-certification.mjs"
+      - ".github/workflows/uxml-certification.yml"
+      - "Benchmarks/RVM JSON to PCF UXML Topology/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "viewer/uxml/**"
+      - "viewer/tests/uxml-*.test.js"
+      - "viewer/tests/rvm-pcf-*.test.js"
+      - "tools/uxml-certification.mjs"
+      - ".github/workflows/uxml-certification.yml"
+      - "Benchmarks/RVM JSON to PCF UXML Topology/**"
+  workflow_dispatch:
+
+jobs:
+  certify:
+    name: certify
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install test runner
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ -f package.json ]; then
+            echo "package.json found. Installing project dependencies with pnpm."
+            pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
+          else
+            echo "package.json not found. Installing Vitest as temporary CI dependency."
+            npm install --no-save vitest jsdom
+          fi
+
+      - name: Run UXML static certification
+        run: node tools/uxml-certification.mjs
+
+      - name: Run UXML Vitest certification
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ -f package.json ]; then
+            pnpm vitest run \
+              viewer/tests/uxml-contracts.test.js \
+              viewer/tests/uxml-profile-detector.test.js \
+              viewer/tests/uxml-normalizer.test.js \
+              viewer/tests/uxml-inputxml-schema-mapper.test.js \
+              viewer/tests/uxml-standard-xml-schema-mapper.test.js \
+              viewer/tests/uxml-pcf-standardxml-bridge.test.js \
+              viewer/tests/uxml-source-intake-bridge-pcf-pdf.test.js \
+              viewer/tests/universal-xml-converter-tab-source-intake.test.js \
+              viewer/tests/uxml-validation-gate.test.js \
+              viewer/tests/uxml-face-model-builder.test.js \
+              viewer/tests/uxml-universal-topo-graph-builder.test.js \
+              viewer/tests/uxml-ray-topo-graph-builder.test.js \
+              viewer/tests/uxml-inputxml-1001-schema-extension.test.js \
+              viewer/tests/uxml-inputxml-1001-real-file-smoke.test.js \
+              viewer/tests/uxml-inputxml-1001-real-topology-workbench-smoke.test.js \
+            viewer/tests/uxml-topo-graph-comparator.test.js \
+            viewer/tests/universal-xml-converter-tab.test.js \
+            viewer/tests/uxml-cl1-route-package.test.js \
+            viewer/tests/uxml-cl1-package-snapshot.test.js \
+            viewer/tests/uxml-cl1-snapshot-replay-validator.test.js \
+            viewer/tests/uxml-cl1-workbench-summary.test.js \
+            viewer/tests/uxml-cl1-workbench-e2e.test.js \
+            viewer/tests/rvm-pcf-uxml-topology-bridge.test.js \
+            viewer/tests/uxml-topology-decision-gate.test.js \
+            viewer/tests/rvm-pcf-uxml-topology-diagnostics-panel.test.js \
+            viewer/tests/rvm-pcf-uxml-topology-benchmark.test.js \
+            viewer/tests/rvm-pcf-export-guard.test.js \
+            viewer/tests/rvm-pcf-accepted-topology-handoff.test.js \
+            viewer/tests/rvm-pcf-uxml-mode-e2e-smoke.test.js \
+            viewer/tests/rvm-pcf-uxml-roundtrip-contract.test.js \
+            viewer/tests/rvm-pcf-generate-button-uxml-contract.test.js \
+            viewer/tests/rvm-pcf-text-output-ownership-smoke.test.js \
+            viewer/tests/rvm-pcf-generate-button-dom-smoke.test.js \
+            viewer/tests/uxml-route-handoff-policy.test.js
+          else
+            npx vitest run \
+              viewer/tests/uxml-contracts.test.js \
+              viewer/tests/uxml-profile-detector.test.js \
+              viewer/tests/uxml-normalizer.test.js \
+              viewer/tests/uxml-inputxml-schema-mapper.test.js \
+              viewer/tests/uxml-standard-xml-schema-mapper.test.js \
+              viewer/tests/uxml-pcf-standardxml-bridge.test.js \
+              viewer/tests/uxml-source-intake-bridge-pcf-pdf.test.js \
+              viewer/tests/universal-xml-converter-tab-source-intake.test.js \
+              viewer/tests/uxml-validation-gate.test.js \
+              viewer/tests/uxml-face-model-builder.test.js \
+              viewer/tests/uxml-universal-topo-graph-builder.test.js \
+              viewer/tests/uxml-ray-topo-graph-builder.test.js \
+            viewer/tests/uxml-inputxml-1001-schema-extension.test.js \
+            viewer/tests/uxml-inputxml-1001-real-file-smoke.test.js \
+            viewer/tests/uxml-inputxml-1001-real-topology-workbench-smoke.test.js \
+            viewer/tests/uxml-topo-graph-comparator.test.js \
+            viewer/tests/universal-xml-converter-tab.test.js \
+            viewer/tests/uxml-cl1-route-package.test.js \
+            viewer/tests/uxml-cl1-package-snapshot.test.js \
+            viewer/tests/uxml-cl1-snapshot-replay-validator.test.js \
+            viewer/tests/uxml-cl1-workbench-summary.test.js \
+            viewer/tests/uxml-cl1-workbench-e2e.test.js \
+            viewer/tests/rvm-pcf-uxml-topology-bridge.test.js \
+            viewer/tests/uxml-topology-decision-gate.test.js \
+            viewer/tests/rvm-pcf-uxml-topology-diagnostics-panel.test.js \
+            viewer/tests/rvm-pcf-uxml-topology-benchmark.test.js \
+            viewer/tests/rvm-pcf-export-guard.test.js \
+            viewer/tests/rvm-pcf-accepted-topology-handoff.test.js \
+            viewer/tests/rvm-pcf-uxml-mode-e2e-smoke.test.js \
+            viewer/tests/rvm-pcf-uxml-roundtrip-contract.test.js \
+            viewer/tests/rvm-pcf-generate-button-uxml-contract.test.js \
+            viewer/tests/rvm-pcf-text-output-ownership-smoke.test.js \
+            viewer/tests/rvm-pcf-generate-button-dom-smoke.test.js \
+            viewer/tests/uxml-route-handoff-policy.test.js
+          fi
+
+      - name: Write certification summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## UXML Certification"
+            echo ""
+            echo "| Gate | Status |"
+            echo "|---|---|"
+            echo "| Static required-file certification | Completed above |"
+            echo "| Vitest UXML suite | Completed above |"
+            echo ""
+            echo "Expected when green:"
+            echo ""
+            echo '```text'
+            echo "Summary"
+            echo "Certification: PASS"
+            echo "Required modules: 25 / 25"
+            echo "Required tests: 34 / 34"
+            echo "Vitest: PASS"
+            echo "Other: 0 skip expected"
+            echo "Annotations: 0 errors and 0 warnings"
+            echo "certify"
+            echo "Process completed with exit code 0"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

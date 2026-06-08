@@ -1,0 +1,55 @@
+{
+  "exportedAt": "2026-06-08T10:58:47.124Z",
+  "logs": [
+    {
+      "id": "3ehk75gyk",
+      "timestamp": 1780916327122,
+      "severity": "error",
+      "category": "ui",
+      "message": "[UI_NOTIFICATION] Import Failed: Missing XML file",
+      "objectId": null,
+      "rowId": null,
+      "lineNo": null,
+      "componentType": null,
+      "propertyName": null,
+      "expectedValue": null,
+      "actualValue": null,
+      "ruleId": null,
+      "ruleText": null,
+      "sourceFile": null,
+      "sourceTable": null,
+      "resolved": false,
+      "tags": []
+    }
+  ],
+  "traceEvents": [],
+  "supportDebug": [
+    {
+      "supportKind": "RST",
+      "friction": 0.3,
+      "gap": "empty",
+      "name": "CA150",
+      "description": "Rest"
+    },
+    {
+      "supportKind": "GDE",
+      "friction": 0.15,
+      "gap": "any",
+      "name": "CA100",
+      "description": "Guide"
+    }
+  ],
+  "perf": {},
+  "notifications": [
+    {
+      "id": "2c6ea5d5-a6cd-4a98-a983-455c0b98d1d0",
+      "ts": 1780916327122,
+      "level": "error",
+      "title": "Import Failed",
+      "message": "Missing XML file",
+      "details": {
+        "id": 123
+      }
+    }
+  ]
+}
